@@ -218,11 +218,45 @@ def copyanything(src, dst):
     None
   """
   try:
-    shutil.copytree(src, dst)
-  except OSError as exc: # python >2.5
+    # Print debug info
+    print(f"Copying from {src} to {dst}")
+    
+    # Check if source exists
+    if not os.path.exists(src):
+      print(f"Error: Source path {src} does not exist")
+      return
+      
+    # Create destination directory if needed
+    os.makedirs(os.path.dirname(dst), exist_ok=True)
+    
+    # If dst exists and is a directory, we need to handle that
+    if os.path.exists(dst):
+      print(f"Destination {dst} already exists, using alternative copy method")
+      # Copy contents instead of directory itself
+      for item in os.listdir(src):
+        s = os.path.join(src, item)
+        d = os.path.join(dst, item)
+        if os.path.isdir(s):
+          try:
+            shutil.copytree(s, d, dirs_exist_ok=True)
+          except TypeError:
+            # Fall back for older Python versions
+            if os.path.exists(d):
+              shutil.rmtree(d)
+            shutil.copytree(s, d)
+        else:
+          shutil.copy2(s, d)
+    else:
+      # Normal copy
+      shutil.copytree(src, dst)
+  except OSError as exc:
+    print(f"Copy error: {exc}")
+    # Try alternative methods
     if exc.errno in (errno.ENOTDIR, errno.EINVAL):
       shutil.copy(src, dst)
-    else: raise
+    else:
+      print(f"Failed to copy from {src} to {dst}")
+      raise
 
 
 if __name__ == '__main__':

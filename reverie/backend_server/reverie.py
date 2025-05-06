@@ -49,6 +49,19 @@ class ReverieServer:
     # simulation, where the first simulation is "hand-crafted".
     self.fork_sim_code = fork_sim_code
     fork_folder = f"{fs_storage}/{self.fork_sim_code}"
+    
+    # Print debug info about paths
+    print(f"DEBUG - Fork from: {fork_folder}")
+    print(f"DEBUG - Storage location: {fs_storage}")
+    
+    # Check if the fork directory exists
+    if not os.path.exists(fork_folder):
+        print(f"ERROR: Fork directory {fork_folder} does not exist!")
+        # List available directories
+        if os.path.exists(fs_storage):
+            print(f"Available directories in {fs_storage}:")
+            for dir_name in os.listdir(fs_storage):
+                print(f"  - {dir_name}")
 
     # <sim_code> indicates our current simulation. The first step here is to 
     # copy everything that's in <fork_sim_code>, but edit its 
@@ -56,6 +69,16 @@ class ReverieServer:
     self.sim_code = sim_code
     sim_folder = f"{fs_storage}/{self.sim_code}"
     copyanything(fork_folder, sim_folder)
+    
+    # Create movement directory if it doesn't exist
+    movement_dir = f"{sim_folder}/movement"
+    if not os.path.exists(movement_dir):
+        os.makedirs(movement_dir)
+        
+    # Create environment directory if it doesn't exist
+    environment_dir = f"{sim_folder}/environment"
+    if not os.path.exists(environment_dir):
+        os.makedirs(environment_dir)
 
     with open(f"{sim_folder}/reverie/meta.json") as json_file:  
       reverie_meta = json.load(json_file)

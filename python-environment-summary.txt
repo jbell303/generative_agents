@@ -1,0 +1,38 @@
+# Python Environment Summary
+
+## Environment Setup
+
+1. Downgraded from Python 3.13 to Python 3.10 by:
+   - Installing Python 3.10 via Homebrew: `brew install python@3.10`
+   - Creating a new virtual environment with Python 3.10: `/opt/homebrew/bin/python3.10 -m venv venv`
+   - Activating the virtual environment: `source venv/bin/activate`
+
+2. Upgraded core pip tools:
+   - `pip install --upgrade pip setuptools wheel`
+
+3. Successfully installed all packages from original requirements.txt
+
+## Compatibility Resolution
+
+The key issue resolved by this downgrade was compatibility with older packages, particularly:
+- `gensim==3.8.0` which had C extension compatibility problems with Python 3.13
+- Other packages with outdated dependencies that were not compatible with Python 3.13
+
+## Current Environment
+
+- Python version: 3.10.17
+- Virtual environment: Located in `./venv/`
+- All required packages installed successfully
+
+## Next Steps
+
+1. The application should now work with all required dependencies.
+2. If you need to install additional packages, use `pip install package_name`.
+3. Remember to always activate the virtual environment before working on the project:
+   ```
+   source venv/bin/activate
+   ```
+4. If you want to export the current environment's packages:
+   ```
+   pip freeze > requirements-frozen.txt
+   ``` 
